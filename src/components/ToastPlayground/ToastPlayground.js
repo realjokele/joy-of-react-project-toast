@@ -3,14 +3,14 @@ import React from "react";
 import Button from "../Button";
 
 import styles from "./ToastPlayground.module.css";
-import Toast from "../Toast/Toast";
+import ToastShelf from "../ToastShelf/ToastShelf";
 
 const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 
 function ToastPlayground() {
   const [toastVariant, setToastVariant] = React.useState(VARIANT_OPTIONS[0]);
   const [toastMessage, setToastMessage] = React.useState("Enter your message");
-  const [displayToast, setDisplayToast] = React.useState(false);
+  const [toasts, setToasts] = React.useState([]);
 
   const handleChangeToastVariant = (event) => {
     setToastVariant(event.target.value);
@@ -20,8 +20,22 @@ function ToastPlayground() {
     setToastMessage(event.target.value);
   };
 
-  const toggleToast = () => {
-    setDisplayToast((current) => !current);
+  const addToast = (event) => {
+    event.preventDefault();
+    setToastMessage("");
+    setToastVariant(VARIANT_OPTIONS[0]);
+    setToasts([
+      ...toasts,
+      {
+        message: toastMessage,
+        variant: toastVariant,
+        key: crypto.randomUUID(),
+      },
+    ]);
+  };
+
+  const dismissToast = (key) => {
+    setToasts(toasts.filter((toast) => toast.key !== key));
   };
 
   return (
@@ -30,13 +44,13 @@ function ToastPlayground() {
         <img alt="Cute toast mascot" src="/toast.png" />
         <h1>Toast Playground</h1>
       </header>
-      {displayToast && (
-        <Toast variant={toastVariant} toggle={toggleToast}>
-          {toastMessage}
-        </Toast>
-      )}
 
-      <div className={styles.controlsWrapper}>
+      <ToastShelf toasts={toasts} dismissToast={dismissToast} />
+
+      <form
+        className={styles.controlsWrapper}
+        onSubmit={(event) => addToast(event)}
+      >
         <div className={styles.row}>
           <label
             htmlFor="message"
@@ -71,18 +85,16 @@ function ToastPlayground() {
                 {variant}
               </label>
             ))}
-
-            {/* TODO Other Variant radio buttons here */}
           </div>
         </div>
 
         <div className={styles.row}>
           <div className={styles.label} />
           <div className={`${styles.inputWrapper} ${styles.radioWrapper}`}>
-            <Button onClick={toggleToast}>Pop Toast!</Button>
+            <Button type="submit">Pop Toast!</Button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
