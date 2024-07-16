@@ -34,7 +34,7 @@ function ToastPlayground() {
     ]);
   };
 
-  const dismissToast = (key) => {
+  const deleteToast = (key) => {
     setToasts(toasts.filter((toast) => toast.key !== key));
   };
 
@@ -45,7 +45,7 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      <ToastShelf toasts={toasts} dismissToast={dismissToast} />
+      <ToastShelf toasts={toasts} deleteToast={deleteToast} />
 
       <form
         className={styles.controlsWrapper}
