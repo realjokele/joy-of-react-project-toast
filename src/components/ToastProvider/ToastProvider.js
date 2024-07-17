@@ -20,9 +20,14 @@ export default function ToastProvider({ children }) {
     setToasts(toasts.filter((toast) => id !== toast.id));
   }
 
+  function clearToasts() {
+    setToasts([]);
+  }
+
   const value = {
     addToast,
     removeToast,
+    clearToasts,
     toasts,
   };
 
